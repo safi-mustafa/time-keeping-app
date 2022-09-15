@@ -6,14 +6,19 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
+import Toast from 'react-native-root-toast';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import axios from "../api-client";
 import AppContainer from "../AppContainer";
+import { API_BASE_URL } from "../constants";
 
 import { globalStyles } from "../utility/globalStyles";
 
 // const windowWidth = Dimensions.get("window").width;
 // const windowHeight = Dimensions.get("window").height;
 
-export default function LoginScreen({navigation}) {
+export default function LoginScreen({ navigation }) {
 
   const [value, setValue] = useState(null);
   const CELL_COUNT = 4;
@@ -23,27 +28,31 @@ export default function LoginScreen({navigation}) {
     setValue,
   });
 
-  const validate = (values) => {
-    const errors = {};
-    if (!values.email) {
-      errors.email = t("Email is required");
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-      errors.email = t("Invalid email address");
-    }
-    if (!values.password) {
-      errors.password = t("Password is required");
-    }
-    return errors;
+  const onSubmit = () => {
+    axios
+      .post(`${API_BASE_URL}/Account/Login?pincode=${value}`)
+      .then(({ data }) => {
+        // console.log("🚀 ~ file: LoginScreen.js ~ line 46 ~ .then ~ data", data.data)
+        storeData(data.data)
+        navigation.navigate('Choose')
+      }, (errors) => {
+        // console.log("🚀 ~ file: LoginScreen.js ~ line 48 ~ .then ~ errors", errors)
+        Toast.show('Pincode is incorrect', {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          backgroundColor: '#cf222e'
+        })
+      })
   };
 
-  const onSubmit = (values) => {
-    navigation.navigate('Choose')
-    setTimeout(() => {
-      // alert(JSON.stringify(values, null, 2));
-      // setSubmitting(false);
-      // navigation.navigate("BottomTab", { ...values });
-    }, 400);
-  };
+  const storeData = async (value) => {
+    const jsonValue = JSON.stringify(value)
+    await AsyncStorage.setItem('user', jsonValue)
+  }
 
   return (
     <AppContainer>
@@ -66,7 +75,7 @@ export default function LoginScreen({navigation}) {
             </Text>
           )}
         />
-        <TouchableOpacity onPress={()=>onSubmit()} style={globalStyles.btnPrimary}><Text style={globalStyles.btnText}>Login</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => onSubmit()} style={globalStyles.btnPrimary}><Text style={globalStyles.btnText}>Login</Text></TouchableOpacity>
       </View>
     </AppContainer>
   );

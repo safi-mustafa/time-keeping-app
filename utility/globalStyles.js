@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 const primaryColor = '#2B3CFF';
 const lightColor = '#FFFFFF';
+const darkColor = '#999999';
 export const globalStyles = StyleSheet.create({
     textCenter: {
         textAlign: "center",
@@ -28,6 +29,12 @@ export const globalStyles = StyleSheet.create({
         textShadowColor: 'rgba(0, 0, 0, 0.75)',
         textShadowOffset: { width: 1, height: 2 },
         textShadowRadius: 4
+    },
+    btnDisabled:{
+        opacity: 0.5
+    },
+    textDisabled:{
+        color: darkColor
     },
     mt1:{
         marginTop: 10
