@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Button, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import {
   CodeField,
   Cursor,
@@ -21,6 +21,7 @@ import { globalStyles } from "../utility/globalStyles";
 export default function LoginScreen({ navigation }) {
 
   const [value, setValue] = useState(null);
+  const [loading, setLoading] = useState(false)
   const CELL_COUNT = 4;
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -29,13 +30,22 @@ export default function LoginScreen({ navigation }) {
   });
 
   const onSubmit = () => {
+    if (!value || value === '' || value.length<4){
+      Toast.show('Please enter valid pincode', {
+        animation: true,
+        delay: 0,
+      })
+      return
+    }
+    setLoading(true)
     axios
       .post(`${API_BASE_URL}/Account/Login?pincode=${value}`)
       .then(({ data }) => {
-        // console.log("🚀 ~ file: LoginScreen.js ~ line 46 ~ .then ~ data", data.data)
+        setLoading(false)
         storeData(data.data)
         navigation.navigate('Choose')
       }, (errors) => {
+        setLoading(false)
         // console.log("🚀 ~ file: LoginScreen.js ~ line 48 ~ .then ~ errors", errors)
         Toast.show('Pincode is incorrect', {
           duration: Toast.durations.LONG,
@@ -75,7 +85,10 @@ export default function LoginScreen({ navigation }) {
             </Text>
           )}
         />
-        <TouchableOpacity onPress={() => onSubmit()} style={globalStyles.btnPrimary}><Text style={globalStyles.btnText}>Login</Text></TouchableOpacity>
+        <TouchableOpacity disabled={loading} onPress={() => onSubmit()} style={globalStyles.btnPrimary}>
+          {loading && <ActivityIndicator color={'#ffffff'} style={styles.loader} />}
+          <Text style={globalStyles.btnText}>Login</Text>
+        </TouchableOpacity>
       </View>
     </AppContainer>
   );
@@ -101,4 +114,9 @@ const styles = StyleSheet.create({
   focusCell: {
     borderColor: '#000',
   },
+  loader: {
+    position: 'absolute',
+    top: 18,
+    left: 75,
+  }
 })
