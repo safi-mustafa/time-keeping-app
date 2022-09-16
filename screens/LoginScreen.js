@@ -44,12 +44,13 @@ export default function LoginScreen({ navigation }) {
         setLoading(false)
         storeData(data.data)
         navigation.navigate('Choose')
+        // navigation.replace('Choose')
       }, (errors) => {
         setLoading(false)
-        // console.log("🚀 ~ file: LoginScreen.js ~ line 48 ~ .then ~ errors", errors)
+        console.log("🚀 ~ file: LoginScreen.js ~ line 48 ~ .then ~ errors", errors)
         Toast.show('Pincode is incorrect', {
           duration: Toast.durations.LONG,
-          position: Toast.positions.BOTTOM,
+          position: Toast.positions.TOP,
           shadow: true,
           animation: true,
           hideOnPress: true,

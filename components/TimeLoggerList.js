@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default function TimeLoggerList({ data = [], onHourChange }) {
 
@@ -18,16 +19,18 @@ export default function TimeLoggerList({ data = [], onHourChange }) {
     }
 
     return <>
-        <View style={styles.container}>
-            {data.map(({ id, day, date, totalHours }) => <View key={id} style={styles.row}>
-                <View style={styles.cell}>
-                    <Text style={styles.cellText}>{day} {formatDate(date)}</Text>
-                </View>
-                <View style={styles.cell}>
-                    <TextInput onChangeText={(value) => onChangeText(value, id)} name={id} keyboardType='numeric' value={totalHours.toString()} style={[styles.cellInput, styles.cellText]} />
-                </View>
-            </View>)}
-        </View>
+        <KeyboardAwareScrollView>
+            <View style={styles.container}>
+                {data.map(({ id, day, date, totalHours }) => <View key={id} style={styles.row}>
+                    <View style={styles.cell}>
+                        <Text style={styles.cellText}>{day} {formatDate(date)}</Text>
+                    </View>
+                    <View style={styles.cell}>
+                        <TextInput onChangeText={(value) => onChangeText(value, id)} name={id} keyboardType='numeric' value={totalHours.toString()} style={[styles.cellInput, styles.cellText]} />
+                    </View>
+                </View>)}
+            </View>
+        </KeyboardAwareScrollView>
     </>
 
 }
@@ -45,7 +48,7 @@ const styles = StyleSheet.create({
     },
     cell: {
         width: '50%',
-        fontSize: 14,
+        fontSize: 13,
         justifyContent: 'center',
     },
     cellText: {
@@ -54,6 +57,6 @@ const styles = StyleSheet.create({
     cellInput: {
         borderColor: '#ccc',
         borderWidth: 1,
-        padding: 5
+        padding: 2
     }
 })

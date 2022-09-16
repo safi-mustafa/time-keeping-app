@@ -99,9 +99,9 @@ export default function TimeLoggingScreen({ navigation, route }) {
               <TouchableHighlight style={[styles.tabItem, isActive(TAB.CURRENT_WEEK) && styles.tabActive]} onPress={() => switchTab(0)}><Text style={[styles.tabText, isActive(TAB.CURRENT_WEEK) && styles.tabActive]}>This Week</Text></TouchableHighlight>
               <TouchableHighlight style={[styles.tabItem, isActive(TAB.LAST_WEEK) && styles.tabActive]} onPress={() => switchTab(1)}><Text style={[styles.tabText, isActive(TAB.LAST_WEEK) && styles.tabActive]}>Last Week</Text></TouchableHighlight>
             </View>
-            {state?.sheetResult && <ScrollView style={{ maxHeight: 250 }}>
+            {state?.sheetResult && <View>
               <TimeLoggerList data={state.sheetResult?.timesheetBreakdowns} onHourChange={onHourChange} />
-            </ScrollView>}
+            </View>}
           </View>
           {loading && <ActivityIndicator size={'large'} color="white" style={globalStyles.loading}/>}
           <AppButton disabled={loading} style={[styles.button, loading && globalStyles.btnDisabled]} onPress={() => onSubmit()} label={'SAVE'} />
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   formWrapper: {
     display: 'flex',
     // marginVertical: 50,
-    marginBottom: 100
+    marginBottom: 70
   },
   loggerWrapper: {
     // padding: 20

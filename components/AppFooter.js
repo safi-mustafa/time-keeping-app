@@ -11,11 +11,11 @@ export default function AppFooter() {
 
 const styles = StyleSheet.create({
     container: {
-        marginBottom: 15,
+        marginBottom: 0,
         bottom: 0,
         position: 'absolute',
         width: '100%',
         padding:5,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#eeeeee'
     }
 });
