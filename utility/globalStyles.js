@@ -30,25 +30,33 @@ export const globalStyles = StyleSheet.create({
         textShadowOffset: { width: 1, height: 2 },
         textShadowRadius: 4
     },
-    btnDisabled:{
+    btnDisabled: {
         opacity: 0.5
     },
-    textDisabled:{
+    textDisabled: {
         color: darkColor
     },
-    mt1:{
+    mt1: {
         marginTop: 10
     },
-    mt2:{
+    mt2: {
         marginTop: 20
     },
-    mt3:{
+    mt3: {
         marginTop: 30
     },
-    mb1:{
+    mb1: {
         marginBottom: 10
     },
-    mb2:{
+    mb2: {
         marginBottom: 20
+    },
+    loading: {
+        position: 'absolute',
+        top: '50%',
+        alignSelf: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        padding: 30,
+        borderRadius: 12,
     }
 });

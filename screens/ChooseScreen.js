@@ -5,7 +5,6 @@ import RadioButtonRN from 'radio-buttons-react-native';
 import AppContainer from "../AppContainer";
 import AppButton from "../components/AppButton";
 import { globalStyles } from "../utility/globalStyles";
-import { userData } from "../utility/utility";
 import { API_BASE_URL } from "../constants";
 import axios from "../api-client";
 
@@ -17,13 +16,12 @@ export default function ChooseScreen({ navigation }) {
   }, [])
 
   const getUserData = async () => {
-    const user = await userData();
-    getProjects(user?.userDetail?.id)
+    getProjects()
     setState({ ...state, user })
   }
 
-  const getProjects = (id) => {
-    axios.get(`${API_BASE_URL}/Timesheet/GetProjects?employeeId=${id}`).then(({ data }) => {
+  const getProjects = () => {
+    axios.get(`${API_BASE_URL}/Timesheet/GetProjects`).then(({ data }) => {
       setState({ ...state, projects: data.data?.employeeProjects })
     }, (errors) => {
       console.log("🚀 ~ file: ChooseScreen.js ~ line 30 ~ axios.get ~ errors", errors)
@@ -41,7 +39,7 @@ export default function ChooseScreen({ navigation }) {
   }
 
   const formateRadioOptions = (values) => {
-    return values.map(({ name, id }) => ({ label: name, value: id }))
+    return values.map(({ name, id, employeeContract = null }) => ({ label: name, value: id, employeeContract }))
   }
 
   const onProjectSelection = (value) => {
@@ -53,7 +51,7 @@ export default function ChooseScreen({ navigation }) {
     setState({ ...state, selectedCraft })
   }
 
-  const onSubmit = (values) => {
+  const onSubmit = () => {
     const { selectedCraft, selectedProject } = state;
     navigation.navigate('TimeLogging', { optionState: { selectedProject, selectedCraft } })
   };
