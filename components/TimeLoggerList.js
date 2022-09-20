@@ -1,17 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import axios from "../api-client";
+import { API_BASE_URL } from "../constants";
 
 export default function TimeLoggerList({ data = [], onHourChange }) {
 
-    // const [state, setState] = useState(data);
-    const onChangeText = (value, id) => {
-        const newState = data.map(item => {
+    const [state, setState] = useState(data);
+
+    useEffect(() => {
+        setState(data)
+        return () => {
+            setState([])
+        }
+    }, [data])
+
+
+    const onChangeText = (value, id, day) => {
+        const newState = state.map(item => {
             return item.id == id ? { ...item, totalHours: value ? parseInt(value) : '' } : item
         })
-        // setState(newState);
         onHourChange(newState);
-        // console.log("🚀 ~ file: TimeLoggerList.js ~ line 9 ~ onChangeText ~ value", value)
+        getOtherHours(value, id, day);
+    }
+
+    const setWorkingHours = (id, {hours, dtHours, otHours, regularHours}) => {
+        const newState = state.map(item => {
+            return item.id == id ? { ...item, totalHours: hours, doubleTimeHours: dtHours, overtimeHours: otHours, regularHours } : item
+        })
+        setState(newState)
+    }
+
+    const getOtherHours = (hours, id, day) => {
+        if (!hours)
+            return
+        axios.get(`${API_BASE_URL}/Timesheet/GetHoursBreakdown?hours=${hours}&day=${day}`).then(({ data }) => {
+            setWorkingHours(id, data?.data)
+        }, (errors) => {
+            console.log("🚀 ~ file: TimeLoggerList.js ~ line 23 ~ axios.get ~ errors", errors)
+        })
     }
 
     const formatDate = (date) => {
@@ -23,15 +50,15 @@ export default function TimeLoggerList({ data = [], onHourChange }) {
     return <>
         <KeyboardAwareScrollView>
             <View style={styles.container}>
-                {data.map(({ id, day, date, totalHours }) => <View key={id} style={styles.row}>
+                {state.map(({ id, day, date, totalHours, doubleTimeHours, overtimeHours, regularHours }) => <View key={id} style={styles.row}>
                     <View style={styles.dateCell}>
                         <Text style={styles.cellText}>{day} {formatDate(date)}</Text>
                     </View>
                     <View style={styles.cell}>
-                        <TextInput onChangeText={(value) => onChangeText(value, id)} name={id} keyboardType='numeric' value={totalHours == 0 ? '' : totalHours.toString()} style={[styles.cellInput, styles.cellText]} />
-                        <Text style={styles.cellTime}>ST: <Text style={styles.bold}>15</Text></Text>
-                        <Text style={styles.cellTime}>OT: <Text style={styles.bold}>05</Text></Text>
-                        <Text style={styles.cellTime}>DT: <Text style={styles.bold}>21</Text></Text>
+                        <TextInput onChangeText={(value) => onChangeText(value, id, day)} name={id} keyboardType='numeric' value={totalHours == 0 ? '' : totalHours.toString()} style={[styles.cellInput, styles.cellText]} />
+                        <Text style={styles.cellTime}>ST: <Text style={styles.bold}>{regularHours}</Text></Text>
+                        <Text style={styles.cellTime}>OT: <Text style={styles.bold}>{overtimeHours}</Text></Text>
+                        <Text style={styles.cellTime}>DT: <Text style={styles.bold}>{doubleTimeHours}</Text></Text>
                     </View>
                 </View>)}
             </View>
@@ -51,7 +78,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         padding: 10
     },
-    dateCell:{
+    dateCell: {
         width: '45%',
         fontSize: 13,
     },
@@ -75,12 +102,12 @@ const styles = StyleSheet.create({
         height: 35,
         textAlign: 'center'
     },
-    cellTime:{
+    cellTime: {
         marginHorizontal: 3,
         color: '#666',
         width: 45
     },
-    bold:{
+    bold: {
         fontweight: 'bold',
         color: '#000'
     }
