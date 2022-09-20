@@ -46,6 +46,7 @@ export default function TimeLoggingScreen({ navigation, route }) {
     setLoading(true);
     axios.get(`${API_BASE_URL}/Timesheet/GetTimeSheet?employeeContractId=${employeeContractId}&WeekEnding=${WeekEnding}`).then(({ data }) => {
       setState({ ...state, sheetResult: data.data, tabIndex })
+      console.log("🚀 ~ file: TimeLoggingScreen.js ~ line 49 ~ axios.get ~ data", data)
       setLoading(false);
     }, (errors) => {
       setLoading(false);
@@ -92,8 +93,8 @@ export default function TimeLoggingScreen({ navigation, route }) {
     <AppContainer>
       <ScrollView>
         <View style={styles.formWrapper}>
-          <Text style={[textCenter]}>Time Logged This Week:</Text>
-          <Text style={[heading, textCenter]}>36 Hours</Text>
+          <Text style={[textCenter]}>Hours Logged This Period:</Text>
+          <Text style={[heading, textCenter]}>{state.sheetResult?.total} Hours</Text>
           <View style={styles.loggerWrapper}>
             <View style={styles.tabsWrapper}>
               <TouchableHighlight style={[styles.tabItem, isActive(TAB.CURRENT_WEEK) && styles.tabActive]} onPress={() => switchTab(0)}><Text style={[styles.tabText, isActive(TAB.CURRENT_WEEK) && styles.tabActive]}>This Week</Text></TouchableHighlight>
@@ -111,6 +112,7 @@ export default function TimeLoggingScreen({ navigation, route }) {
   );
 }
 
+const tabColor = '#007bff'; //'#dc3545'
 const styles = StyleSheet.create({
   formWrapper: {
     display: 'flex',
@@ -127,17 +129,17 @@ const styles = StyleSheet.create({
   tabsWrapper: {
     marginTop: 20,
     flexDirection: 'row',
-    backgroundColor: 'red'
+    backgroundColor: tabColor
   },
   tabItem: {
     width: "50%",
     backgroundColor: '#fff',
     padding: 10,
-    borderColor: 'red',
+    borderColor: tabColor,
     borderWidth: 2
   },
   tabActive: {
-    backgroundColor: 'red',
+    backgroundColor: tabColor,
     color: 'white'
   },
   tabText: {

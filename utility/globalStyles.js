@@ -26,7 +26,7 @@ export const globalStyles = StyleSheet.create({
         fontWeight: "300"
     },
     textShadow: {
-        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowColor: 'rgba(0, 0, 0, 0.45)',
         textShadowOffset: { width: 1, height: 2 },
         textShadowRadius: 4
     },
@@ -34,7 +34,7 @@ export const globalStyles = StyleSheet.create({
         opacity: 0.5
     },
     textDisabled: {
-        color: darkColor
+        color: '#eeeeee'
     },
     mt1: {
         marginTop: 10

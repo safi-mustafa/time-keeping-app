@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Button, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import {
   CodeField,
   Cursor,
@@ -8,6 +8,8 @@ import {
 } from 'react-native-confirmation-code-field';
 import Toast from 'react-native-root-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 import axios from "../api-client";
 import AppContainer from "../AppContainer";
@@ -29,8 +31,18 @@ export default function LoginScreen({ navigation }) {
     setValue,
   });
 
+  const onValueChange = (value) => {
+    setValue(value);
+  }
+
+  useEffect(() => {
+    if (value && value.length === 4) {
+      onSubmit();
+    }
+  }, [value])
+
   const onSubmit = () => {
-    if (!value || value === '' || value.length<4){
+    if (!value || value === '' || value.length < 4) {
       Toast.show('Please enter valid pincode', {
         animation: true,
         delay: 0,
@@ -66,39 +78,46 @@ export default function LoginScreen({ navigation }) {
   }
 
   return (
+    <View marginTop={getStatusBarHeight()+25} flex={1}>
     <AppContainer>
-      <View style={styles.formWrapper}>
-        <Text style={[globalStyles.heading]}>Employee Login</Text>
-        <Text style={[globalStyles.textCenter]}>Enter last four digits of SSN</Text>
-        <CodeField
-          value={value}
-          onChangeText={setValue}
-          cellCount={CELL_COUNT}
-          rootStyle={styles.codeFieldRoot}
-          keyboardType="number-pad"
-          textContentType="oneTimeCode"
-          renderCell={({ index, symbol, isFocused }) => (
-            <Text
-              key={index}
-              style={[styles.cell, isFocused && styles.focusCell]}
-              onLayout={getCellOnLayoutHandler(index)}>
-              {symbol || (isFocused ? <Cursor /> : null)}
-            </Text>
-          )}
-        />
-        <TouchableOpacity disabled={loading} onPress={() => onSubmit()} style={globalStyles.btnPrimary}>
-          {loading && <ActivityIndicator color={'#ffffff'} style={styles.loader} />}
-          <Text style={globalStyles.btnText}>Login</Text>
-        </TouchableOpacity>
-      </View>
+      <KeyboardAwareScrollView enableAutomaticScroll={true}>
+        {loading && <ActivityIndicator size="large" color="#2B3CFF" style={styles.loader2} />}
+        <View style={styles.formWrapper}>
+          <Text style={[globalStyles.heading]}>Employee Login</Text>
+          <Text style={[globalStyles.textCenter]}>Enter last four digits of SSN</Text>
+          <CodeField
+            value={value}
+            onChangeText={onValueChange}
+            cellCount={CELL_COUNT}
+            rootStyle={styles.codeFieldRoot}
+            keyboardType="number-pad"
+            textContentType="oneTimeCode"
+            renderCell={({ index, symbol, isFocused }) => (
+              <Text
+                key={index}
+                style={[styles.cell, isFocused && styles.focusCell]}
+                onLayout={getCellOnLayoutHandler(index)}>
+                {symbol || (isFocused ? <Cursor /> : null)}
+              </Text>
+            )}
+          />
+          <TouchableOpacity disabled={loading} onPress={() => onSubmit()} style={globalStyles.btnPrimary}>
+            {loading && <ActivityIndicator color={'#ffffff'} style={styles.loader} />}
+            <Text style={globalStyles.btnText}>Login</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
     </AppContainer>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   formWrapper: {
-    display: 'flex',
-    marginVertical: 100,
+    // display: 'flex',
+    marginTop: 100,
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   codeFieldRoot: {
     marginVertical: 10
@@ -119,5 +138,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 18,
     left: 75,
+  },
+  loader2: {
+    position: 'absolute',
+    alignSelf: 'center',
+    top: 50
   }
 })

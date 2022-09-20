@@ -3,6 +3,7 @@ import { userData } from './utility/utility';
 const token = '';
 
 axios.defaults.headers.common = { Authorization: `Bearer ${token}` };
+axios.defaults.timeout = 2500;
 // Add a request interceptor
 axios.interceptors.request.use(
   async function (config) {

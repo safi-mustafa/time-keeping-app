@@ -10,7 +10,7 @@ export default function AppHeader() {
             <Image style={styles.logoImage} source={APP_LOGO} alt="logo" />
             <Text style={[styles.logoText, globalStyles.textShadow]}>LITE</Text>
         </View>
-        <Text style={[styles.logoHeading, globalStyles.textShadow]}>PROJECT MANAGMENT</Text>
+        {/* <Text style={[styles.logoHeading, globalStyles.textShadow]}>PROJECT MANAGMENT</Text> */}
     </>
 
 }
@@ -19,18 +19,17 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         alignItems: "flex-end",
-        marginTop: getStatusBarHeight() + 20
+        marginTop: getStatusBarHeight() - 20
     },
     logoImage: {
-        width: 100,
-        height: 100,
+        width: 70,
+        height: 60,
     },
     logoText: {
-        fontSize: 60,
+        fontSize: 50,
         marginLeft: 10,
     },
     logoHeading: {
         fontSize: 30,
-        marginTop: 10,
     },
 })
