@@ -9,6 +9,7 @@ export default function TimeLoggerList({ data = [], onHourChange }) {
     const [state, setState] = useState(data);
 
     useEffect(() => {
+        // console.log("🚀 ~ file: TimeLoggerList.js ~ line 13 ~ useEffect ~ data", data)
         setState(data)
         return () => {
             setState([])
@@ -16,25 +17,27 @@ export default function TimeLoggerList({ data = [], onHourChange }) {
     }, [data])
 
 
-    const onChangeText = (value, id, day) => {
+    const onChangeText = (value, selectedItem) => {
+        // let currentDayItem = {};
         const newState = state.map(item => {
-            return item.id == id ? { ...item, totalHours: value ? parseInt(value) : '' } : item
+            return item.id == selectedItem?.id ? { ...item, totalHours: value ? parseInt(value) : '' } : item
         })
         onHourChange(newState);
-        getOtherHours(value, id, day);
+        getOtherHours(value, selectedItem);
     }
 
-    const setWorkingHours = (id, {hours, dtHours, otHours, regularHours}) => {
+    const setWorkingHours = (id, { totalHours, totalCost, dtHours, otHours, stHours }) => {
         const newState = state.map(item => {
-            return item.id == id ? { ...item, totalHours: hours, doubleTimeHours: dtHours, overtimeHours: otHours, regularHours } : item
+            return item.id == id ? { ...item, totalHours, totalCost, dtHours, otHours, stHours } : item
         })
-        setState(newState)
+        onHourChange(newState)
     }
 
-    const getOtherHours = (hours, id, day) => {
-        if (!hours)
-            return
-        axios.get(`${API_BASE_URL}/Timesheet/GetHoursBreakdown?hours=${hours}&day=${day}`).then(({ data }) => {
+    const getOtherHours = (hours, { id, day, stRate, otRate, dtRate }) => {
+        const params = `hours=${hours}&day=${day}&stRate=${stRate}&otRate=${otRate}&dtRate=${dtRate}`
+        // if (!hours)
+        //     return
+        axios.get(`${API_BASE_URL}/Timesheet/GetHoursBreakdown?${params}`).then(({ data }) => {
             setWorkingHours(id, data?.data)
         }, (errors) => {
             console.log("🚀 ~ file: TimeLoggerList.js ~ line 23 ~ axios.get ~ errors", errors)
@@ -50,15 +53,15 @@ export default function TimeLoggerList({ data = [], onHourChange }) {
     return <>
         <KeyboardAwareScrollView>
             <View style={styles.container}>
-                {state.map(({ id, day, date, totalHours, doubleTimeHours, overtimeHours, regularHours }) => <View key={id} style={styles.row}>
+                {state.map(({ id, day, date, totalHours, dtHours, otHours, stHours, ...otherItem }) => <View key={id} style={styles.row}>
                     <View style={styles.dateCell}>
                         <Text style={styles.cellText}>{day} {formatDate(date)}</Text>
                     </View>
                     <View style={styles.cell}>
-                        <TextInput onChangeText={(value) => onChangeText(value, id, day)} name={id} keyboardType='numeric' value={totalHours == 0 ? '' : totalHours.toString()} style={[styles.cellInput, styles.cellText]} />
-                        <Text style={styles.cellTime}>ST: <Text style={styles.bold}>{regularHours}</Text></Text>
-                        <Text style={styles.cellTime}>OT: <Text style={styles.bold}>{overtimeHours}</Text></Text>
-                        <Text style={styles.cellTime}>DT: <Text style={styles.bold}>{doubleTimeHours}</Text></Text>
+                        <TextInput onChangeText={(value) => onChangeText(value, { id, day, ...otherItem })} name={id} keyboardType='numeric' value={totalHours ? totalHours.toString() : ''} style={[styles.cellInput, styles.cellText]} />
+                        <Text style={styles.cellTime}>ST: <Text style={styles.bold}>{stHours}</Text></Text>
+                        <Text style={styles.cellTime}>OT: <Text style={styles.bold}>{otHours}</Text></Text>
+                        <Text style={styles.cellTime}>DT: <Text style={styles.bold}>{dtHours}</Text></Text>
                     </View>
                 </View>)}
             </View>

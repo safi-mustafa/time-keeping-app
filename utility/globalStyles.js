@@ -25,6 +25,16 @@ export const globalStyles = StyleSheet.create({
         marginTop: 10,
         fontWeight: "300"
     },
+    heading2: {
+        fontSize: 30,
+        marginTop: 10,
+        fontWeight: "300"
+    },
+    heading3: {
+        fontSize: 20,
+        marginTop: 10,
+        fontWeight: "300"
+    },
     textShadow: {
         textShadowColor: 'rgba(0, 0, 0, 0.45)',
         textShadowOffset: { width: 1, height: 2 },

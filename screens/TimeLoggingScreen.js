@@ -12,7 +12,7 @@ import axios from "../api-client";
 
 export default function TimeLoggingScreen({ navigation, route }) {
   const { optionState } = route.params;
-  const { textCenter, heading } = globalStyles
+  const { textCenter, heading, heading3 } = globalStyles
   const [state, setState] = useState({ tabIndex: 0, sheetResult: null });
   const [loading, setLoading] = useState(false)
 
@@ -64,11 +64,25 @@ export default function TimeLoggingScreen({ navigation, route }) {
     setState({ ...state, sheetResult: { ...state.sheetResult, ...{ timesheetBreakdowns: newSheet } } })
   }
 
+  const getTotalCost = () => {
+    return state?.sheetResult?.timesheetBreakdowns && state?.sheetResult?.timesheetBreakdowns.reduce(function (prev, cur) {
+      return prev + cur.totalCost;
+    }, 0);
+  }
+
+  const getTotalHours = () => {
+    const data = state?.sheetResult?.timesheetBreakdowns;
+    return data && data.filter(({ totalHours }) => totalHours && totalHours).reduce(function (prev, cur) {
+      return prev + cur.totalHours;
+    }, 0);
+  }
+
   const onSubmit = () => {
     setLoading(true);
     axios
       .put(`${API_BASE_URL}/Timesheet`, { ...state.sheetResult })
       .then(({ data }) => {
+        // console.log("🚀 ~ file: TimeLoggingScreen.js ~ line 87 ~ .then ~ data", data)
         setLoading(false);
         Toast.show('Sheet Updated Successfully', {
           position: Toast.positions.BOTTOM,
@@ -94,17 +108,18 @@ export default function TimeLoggingScreen({ navigation, route }) {
       <ScrollView>
         <View style={styles.formWrapper}>
           <Text style={[textCenter]}>Hours Logged This Period:</Text>
-          <Text style={[heading, textCenter]}>{state.sheetResult?.total} Hours</Text>
+          <Text style={[heading, textCenter]}>{getTotalHours()} Hours</Text>
+          <Text style={[heading3, textCenter]}>Total cost: {getTotalCost()}</Text>
           <View style={styles.loggerWrapper}>
             <View style={styles.tabsWrapper}>
               <TouchableHighlight style={[styles.tabItem, isActive(TAB.CURRENT_WEEK) && styles.tabActive]} onPress={() => switchTab(0)}><Text style={[styles.tabText, isActive(TAB.CURRENT_WEEK) && styles.tabActive]}>This Week</Text></TouchableHighlight>
-              <TouchableHighlight style={[styles.tabItem, isActive(TAB.LAST_WEEK) && styles.tabActive]} onPress={() => switchTab(1)}><Text style={[styles.tabText, isActive(TAB.LAST_WEEK) && styles.tabActive]}>Last Week</Text></TouchableHighlight>
+              {/* <TouchableHighlight style={[styles.tabItem, isActive(TAB.LAST_WEEK) && styles.tabActive]} onPress={() => switchTab(1)}><Text style={[styles.tabText, isActive(TAB.LAST_WEEK) && styles.tabActive]}>Last Week</Text></TouchableHighlight> */}
             </View>
             {state?.sheetResult && <View>
               <TimeLoggerList data={state.sheetResult?.timesheetBreakdowns} onHourChange={onHourChange} />
             </View>}
           </View>
-          {loading && <ActivityIndicator size={'large'} color="white" style={globalStyles.loading}/>}
+          {loading && <ActivityIndicator size={'large'} color="white" style={globalStyles.loading} />}
           <AppButton disabled={loading} style={[styles.button, loading && globalStyles.btnDisabled]} onPress={() => onSubmit()} label={'SAVE'} />
         </View>
       </ScrollView>
@@ -132,7 +147,8 @@ const styles = StyleSheet.create({
     backgroundColor: tabColor
   },
   tabItem: {
-    width: "50%",
+    // width: "50%",
+    width: "100%",
     backgroundColor: '#fff',
     padding: 10,
     borderColor: tabColor,
