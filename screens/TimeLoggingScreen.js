@@ -30,13 +30,13 @@ export default function TimeLoggingScreen({ navigation, route }) {
 
   const getLastWeekDate = () => {
     let today = new Date();
-    let lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+    let lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 0);
     return `${lastWeek.getFullYear()}-${lastWeek.getMonth() + 1}-${lastWeek.getDate()}`
   }
 
   const getUserData = async () => {
     const user = await userData();
-    getTimeSheet()
+    getTimeSheet(TAB.CURRENT_WEEK, getLastWeekDate())
     setState({ ...state, user })
   }
 

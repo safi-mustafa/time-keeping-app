@@ -10,7 +10,7 @@ import axios from "../api-client";
 
 export default function ChooseScreen({ navigation }) {
   const [state, setState] = useState({ selectedCraft: null, selectedProject: null });
-
+  const [resetCraft, setResetCraft] = useState(null)
   useEffect(() => {
     getUserData()
   }, [])
@@ -44,7 +44,11 @@ export default function ChooseScreen({ navigation }) {
 
   const onProjectSelection = (value) => {
     const selectedProject = state?.projects.find(({ project }) => project.id === value);
-    setState({ ...state, selectedProject })
+    setState({ ...state, selectedProject, selectedCraft: null })
+    setResetCraft(true)
+    setTimeout(() => {
+      setResetCraft(false)
+    }, 1000);
   }
 
   const onCraftSelection = (selectedCraft) => {
@@ -70,6 +74,7 @@ export default function ChooseScreen({ navigation }) {
           {state?.selectedProject && <>
             <Text style={[globalStyles.heading, globalStyles.mt3]}>Choose Craft</Text>
             <RadioButtonRN
+              initial={resetCraft && -1}
               data={formateRadioOptions(state?.selectedProject?.craft)}
               selectedBtn={(option) => onCraftSelection(option)}
             />
