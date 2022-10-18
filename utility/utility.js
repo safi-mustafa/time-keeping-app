@@ -5,7 +5,7 @@ export const userData = async () => {
         const jsonValue = await AsyncStorage.getItem('user')
         return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
-        console.log("🚀 ~ file: utility.js ~ line 8 ~ getUserData ~ e", e)
+        // console.log("🚀 ~ file: utility.js ~ line 8 ~ getUserData ~ e", e)
         return null;
     }
 }

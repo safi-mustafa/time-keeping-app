@@ -79,6 +79,8 @@ export default function TimeLoggingScreen({ navigation, route }) {
 
   const onSubmit = () => {
     setLoading(true);
+    console.log("🚀 ~ file: TimeLoggingScreen.js ~ line 104 ~ onSubmit ~ state.sheetResult", state.sheetResult)
+
     axios
       .put(`${API_BASE_URL}/Timesheet`, { ...state.sheetResult })
       .then(({ data }) => {
@@ -109,7 +111,7 @@ export default function TimeLoggingScreen({ navigation, route }) {
         <View style={styles.formWrapper}>
           <Text style={[textCenter]}>Hours Logged This Period:</Text>
           <Text style={[heading, textCenter]}>{getTotalHours()} Hours</Text>
-          <Text style={[heading3, textCenter]}>Total cost: {getTotalCost()}</Text>
+          {/* <Text style={[heading3, textCenter]}>Total cost: {getTotalCost()}</Text> */}
           <View style={styles.loggerWrapper}>
             <View style={styles.tabsWrapper}>
               <TouchableHighlight style={[styles.tabItem, isActive(TAB.CURRENT_WEEK) && styles.tabActive]} onPress={() => switchTab(0)}><Text style={[styles.tabText, isActive(TAB.CURRENT_WEEK) && styles.tabActive]}>This Week</Text></TouchableHighlight>
