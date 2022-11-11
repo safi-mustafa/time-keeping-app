@@ -57,10 +57,12 @@ export default function LoginScreen({ navigation }) {
         storeData(data.data)
         navigation.navigate('Choose')
         // navigation.replace('Choose')
-      }, (errors) => {
+      }, (error) => {
         setLoading(false)
-        console.log("🚀 ~ file: LoginScreen.js ~ line 48 ~ .then ~ errors", errors)
-        Toast.show('Pincode is incorrect', {
+        let resMessage = error?.response?.data?.errors?.message;
+        // console.log("🚀 ~ file: LoginScreen.js ~ line 48 ~ .then ~ error", resMessage)
+        let message = Array.isArray(resMessage) ? resMessage.join('.') : 'Something went wrong, Please try again.'
+        Toast.show(message, {
           duration: Toast.durations.LONG,
           position: Toast.positions.TOP,
           shadow: true,
@@ -78,36 +80,36 @@ export default function LoginScreen({ navigation }) {
   }
 
   return (
-    <View marginTop={getStatusBarHeight()+25} flex={1}>
-    <AppContainer>
-      <KeyboardAwareScrollView enableAutomaticScroll={true}>
-        {loading && <ActivityIndicator size="large" color="#2B3CFF" style={styles.loader2} />}
-        <View style={styles.formWrapper}>
-          <Text style={[globalStyles.heading]}>Employee Login</Text>
-          <Text style={[globalStyles.textCenter]}>Enter last four digits of SSN</Text>
-          <CodeField
-            value={value}
-            onChangeText={onValueChange}
-            cellCount={CELL_COUNT}
-            rootStyle={styles.codeFieldRoot}
-            keyboardType="number-pad"
-            textContentType="oneTimeCode"
-            renderCell={({ index, symbol, isFocused }) => (
-              <Text
-                key={index}
-                style={[styles.cell, isFocused && styles.focusCell]}
-                onLayout={getCellOnLayoutHandler(index)}>
-                {symbol || (isFocused ? <Cursor /> : null)}
-              </Text>
-            )}
-          />
-          <TouchableOpacity disabled={loading} onPress={() => onSubmit()} style={globalStyles.btnPrimary}>
-            {loading && <ActivityIndicator color={'#ffffff'} style={styles.loader} />}
-            <Text style={globalStyles.btnText}>Login</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAwareScrollView>
-    </AppContainer>
+    <View marginTop={getStatusBarHeight() + 25} flex={1}>
+      <AppContainer>
+        <KeyboardAwareScrollView enableAutomaticScroll={true}>
+          {loading && <ActivityIndicator size="large" color="#2B3CFF" style={styles.loader2} />}
+          <View style={styles.formWrapper}>
+            <Text style={[globalStyles.heading]}>Employee Login</Text>
+            <Text style={[globalStyles.textCenter]}>Enter last four digits of SSN</Text>
+            <CodeField
+              value={value}
+              onChangeText={onValueChange}
+              cellCount={CELL_COUNT}
+              rootStyle={styles.codeFieldRoot}
+              keyboardType="number-pad"
+              textContentType="oneTimeCode"
+              renderCell={({ index, symbol, isFocused }) => (
+                <Text
+                  key={index}
+                  style={[styles.cell, isFocused && styles.focusCell]}
+                  onLayout={getCellOnLayoutHandler(index)}>
+                  {symbol || (isFocused ? <Cursor /> : null)}
+                </Text>
+              )}
+            />
+            <TouchableOpacity disabled={loading} onPress={() => onSubmit()} style={globalStyles.btnPrimary}>
+              {loading && <ActivityIndicator color={'#ffffff'} style={styles.loader} />}
+              <Text style={globalStyles.btnText}>Login</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAwareScrollView>
+      </AppContainer>
     </View>
   );
 }

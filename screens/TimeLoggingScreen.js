@@ -118,7 +118,7 @@ export default function TimeLoggingScreen({ navigation, route }) {
               {/* <TouchableHighlight style={[styles.tabItem, isActive(TAB.LAST_WEEK) && styles.tabActive]} onPress={() => switchTab(1)}><Text style={[styles.tabText, isActive(TAB.LAST_WEEK) && styles.tabActive]}>Last Week</Text></TouchableHighlight> */}
             </View>
             {state?.sheetResult && <View>
-              <TimeLoggerList data={state.sheetResult?.timesheetBreakdowns} onHourChange={onHourChange} />
+              <TimeLoggerList data={state.sheetResult} onHourChange={onHourChange} />
             </View>}
           </View>
           {loading && <ActivityIndicator size={'large'} color="white" style={globalStyles.loading} />}

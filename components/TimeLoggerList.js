@@ -4,20 +4,24 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import axios from "../api-client";
 import { API_BASE_URL } from "../constants";
 
-export default function TimeLoggerList({ data = [], onHourChange }) {
-
-    const [state, setState] = useState(data);
+export default function TimeLoggerList({ data, onHourChange }) {
+    const { timesheetBreakdowns = [], isApproved } = data;
+    const [state, setState] = useState(timesheetBreakdowns);
 
     useEffect(() => {
-        // console.log("🚀 ~ file: TimeLoggerList.js ~ line 13 ~ useEffect ~ data", data)
-        setState(data)
+        console.log("🚀 ~ file: TimeLoggerList.js ~ line 13 ~ useEffect ~ data", data)
+        setState(timesheetBreakdowns)
         return () => {
             setState([])
         }
-    }, [data])
+    }, [timesheetBreakdowns])
 
 
     const onChangeText = (value, selectedItem) => {
+        if (value > 24)
+            value = 24
+        else if (value < 0)
+            value = 1
         // let currentDayItem = {};
         const newState = state.map(item => {
             return item.id == selectedItem?.id ? { ...item, totalHours: value ? parseInt(value) : '' } : item
@@ -53,12 +57,12 @@ export default function TimeLoggerList({ data = [], onHourChange }) {
     return <>
         <KeyboardAwareScrollView>
             <View style={styles.container}>
-                {state.map(({ id, day, date, totalHours, dtHours, otHours, stHours, ...otherItem }) => <View key={id} style={styles.row}>
+                {state.map(({ id, day, date, totalHours, dtHours, otHours, stHours,disableDayEntry, ...otherItem }) => <View key={id} style={styles.row}>
                     <View style={styles.dateCell}>
                         <Text style={styles.cellText}>{day} {formatDate(date)}</Text>
                     </View>
                     <View style={styles.cell}>
-                        <TextInput onChangeText={(value) => onChangeText(value, { id, day, ...otherItem })} name={id} keyboardType='numeric' value={totalHours ? totalHours.toString() : ''} style={[styles.cellInput, styles.cellText]} />
+                        <TextInput editable={!isApproved && !disableDayEntry} onChangeText={(value) => onChangeText(value, { id, day, ...otherItem })} name={id} keyboardType='numeric' value={totalHours ? totalHours.toString() : ''} style={[styles.cellInput, styles.cellText, (isApproved || disableDayEntry) && styles.cellDisabled]} />
                         <Text style={styles.cellTime}>ST: <Text style={styles.bold}>{stHours}</Text></Text>
                         <Text style={styles.cellTime}>OT: <Text style={styles.bold}>{otHours}</Text></Text>
                         <Text style={styles.cellTime}>DT: <Text style={styles.bold}>{dtHours}</Text></Text>
@@ -104,6 +108,11 @@ const styles = StyleSheet.create({
         marginRight: 5,
         height: 35,
         textAlign: 'center'
+    },
+    cellDisabled:{
+        backgroundColor: '#ddd',
+        borderColor: '#999',
+        color: '#666'
     },
     cellTime: {
         marginHorizontal: 3,
