@@ -189,11 +189,12 @@ const styles = StyleSheet.create({
   cellTime: {
     marginHorizontal: 3,
     color: '#666',
-    width: 45
+    marginHorizontal: 10,
+    fontSize: 20
   },
   bold: {
     fontweight: 'bold',
     color: '#000',
-    fontSize: 16
+    fontSize: 20
   }
 })

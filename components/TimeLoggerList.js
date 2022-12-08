@@ -70,9 +70,9 @@ export default function TimeLoggerList({ data, onHourChange }) {
                     </View>
                     <View style={styles.cell}>
                         <TextInput editable={!isApproved} onChangeText={(value) => onChangeText(value, { id, day, ...otherItem })} name={id} keyboardType='numeric' value={totalHours ? totalHours.toString() : ''} style={[styles.cellInput, styles.cellText, (isApproved) && styles.cellDisabled]} />
-                        <Text style={{paddingRight: 5, paddingLeft: 10}}>On Site:</Text>
+                        <Text style={{paddingRight: 5, paddingLeft: 10}}>{isOnSite?'On Site':'Remote'}:</Text>
                         <Switch
-                            trackColor={{ false: "gray", true: "green" }}
+                            trackColor={{ false: "gray", true: "#007bff" }}
                             thumbColor={true ? "#fff" : "#fff"}
                             ios_backgroundColor="#eeeeee"
                             onValueChange={(value) => onSiteChange(value, { id, day, ...otherItem })}
