@@ -105,12 +105,27 @@ export default function TimeLoggingScreen({ navigation, route }) {
       });
   };
 
+  let totalSheetHours = { stHours: 0, otHours: 0, dtHours: 0 }
+  Array.isArray(state.sheetResult?.timesheetBreakdowns) && state.sheetResult?.timesheetBreakdowns.forEach(({ dtHours, otHours, stHours }) => {
+    totalSheetHours = { 
+      ...totalSheetHours, 
+      dtHours: totalSheetHours.dtHours + dtHours, 
+      stHours: totalSheetHours.stHours + stHours, 
+      otHours: totalSheetHours.otHours + otHours, 
+    }
+  })
+
   return (
     <AppContainer>
       <ScrollView>
         <View style={styles.formWrapper}>
           <Text style={[textCenter]}>Hours Logged This Period:</Text>
           <Text style={[heading, textCenter]}>{getTotalHours()} Hours</Text>
+          <View style={styles.cell}>
+            <Text style={styles.cellTime}>ST: <Text style={styles.bold}>{totalSheetHours?.stHours}</Text></Text>
+            <Text style={styles.cellTime}>OT: <Text style={styles.bold}>{totalSheetHours?.otHours}</Text></Text>
+            <Text style={styles.cellTime}>DT: <Text style={styles.bold}>{totalSheetHours?.dtHours}</Text></Text>
+          </View>
           {/* <Text style={[heading3, textCenter]}>Total cost: {getTotalCost()}</Text> */}
           <View style={styles.loggerWrapper}>
             <View style={styles.tabsWrapper}>
@@ -164,5 +179,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontweight: '800',
     textAlign: 'center'
+  },
+  cell: {
+    margin: 5,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  cellTime: {
+    marginHorizontal: 3,
+    color: '#666',
+    width: 45
+  },
+  bold: {
+    fontweight: 'bold',
+    color: '#000',
+    fontSize: 16
   }
 })

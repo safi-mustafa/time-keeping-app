@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Switch, Text, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import axios from "../api-client";
 import { API_BASE_URL } from "../constants";
@@ -9,13 +9,20 @@ export default function TimeLoggerList({ data, onHourChange }) {
     const [state, setState] = useState(timesheetBreakdowns);
 
     useEffect(() => {
-        console.log("🚀 ~ file: TimeLoggerList.js ~ line 13 ~ useEffect ~ data", data)
+        // console.log("🚀 ~ file: TimeLoggerList.js ~ line 13 ~ useEffect ~ data", data)
         setState(timesheetBreakdowns)
         return () => {
             setState([])
         }
     }, [timesheetBreakdowns])
 
+
+    const onSiteChange = (value, selectedItem) => {
+        const newState = state.map(item => {
+            return item.id == selectedItem?.id ? { ...item, isOnSite: value } : item
+        })
+        onHourChange(newState);
+    }
 
     const onChangeText = (value, selectedItem) => {
         if (value > 24)
@@ -57,15 +64,23 @@ export default function TimeLoggerList({ data, onHourChange }) {
     return <>
         <KeyboardAwareScrollView>
             <View style={styles.container}>
-                {state.map(({ id, day, date, totalHours, dtHours, otHours, stHours,disableDayEntry, ...otherItem }) => <View key={id} style={styles.row}>
+                {state.map(({ id, day, date, isOnSite, totalHours, dtHours, otHours, stHours, ...otherItem }) => <View key={id} style={styles.row}>
                     <View style={styles.dateCell}>
                         <Text style={styles.cellText}>{day} {formatDate(date)}</Text>
                     </View>
                     <View style={styles.cell}>
-                        <TextInput editable={!isApproved && !disableDayEntry} onChangeText={(value) => onChangeText(value, { id, day, ...otherItem })} name={id} keyboardType='numeric' value={totalHours ? totalHours.toString() : ''} style={[styles.cellInput, styles.cellText, (isApproved || disableDayEntry) && styles.cellDisabled]} />
-                        <Text style={styles.cellTime}>ST: <Text style={styles.bold}>{stHours}</Text></Text>
+                        <TextInput editable={!isApproved} onChangeText={(value) => onChangeText(value, { id, day, ...otherItem })} name={id} keyboardType='numeric' value={totalHours ? totalHours.toString() : ''} style={[styles.cellInput, styles.cellText, (isApproved) && styles.cellDisabled]} />
+                        <Text style={{paddingRight: 5, paddingLeft: 10}}>On Site:</Text>
+                        <Switch
+                            trackColor={{ false: "gray", true: "green" }}
+                            thumbColor={true ? "#fff" : "#fff"}
+                            ios_backgroundColor="#eeeeee"
+                            onValueChange={(value) => onSiteChange(value, { id, day, ...otherItem })}
+                            value={isOnSite}
+                        />
+                        {/* <Text style={styles.cellTime}>ST: <Text style={styles.bold}>{stHours}</Text></Text>
                         <Text style={styles.cellTime}>OT: <Text style={styles.bold}>{otHours}</Text></Text>
-                        <Text style={styles.cellTime}>DT: <Text style={styles.bold}>{dtHours}</Text></Text>
+                        <Text style={styles.cellTime}>DT: <Text style={styles.bold}>{dtHours}</Text></Text> */}
                     </View>
                 </View>)}
             </View>
@@ -90,7 +105,7 @@ const styles = StyleSheet.create({
         fontSize: 13,
     },
     cell: {
-        width: '55%',
+        width: '100%',
         fontSize: 13,
         paddingLeft: 10,
         // justifyContent: 'center',
@@ -104,12 +119,12 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderWidth: 1,
         padding: 2,
-        minWidth: 45,
+        minWidth: 85,
         marginRight: 5,
         height: 35,
         textAlign: 'center'
     },
-    cellDisabled:{
+    cellDisabled: {
         backgroundColor: '#ddd',
         borderColor: '#999',
         color: '#666'

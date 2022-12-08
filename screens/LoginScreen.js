@@ -58,9 +58,10 @@ export default function LoginScreen({ navigation }) {
         navigation.navigate('Choose')
         // navigation.replace('Choose')
       }, (error) => {
+        console.log("🚀 ~ file: LoginScreen.js ~ line 61 ~ .then ~ error", JSON.stringify(error?.response))
         setLoading(false)
         let resMessage = error?.response?.data?.errors?.message;
-        // console.log("🚀 ~ file: LoginScreen.js ~ line 48 ~ .then ~ error", resMessage)
+        console.log("🚀 ~ file: LoginScreen.js ~ line 48 ~ .then ~ error", resMessage)
         let message = Array.isArray(resMessage) ? resMessage.join('.') : 'Something went wrong, Please try again.'
         Toast.show(message, {
           duration: Toast.durations.LONG,
