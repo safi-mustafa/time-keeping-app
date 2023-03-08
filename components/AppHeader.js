@@ -8,7 +8,7 @@ export default function AppHeader() {
     return <>
         <View style={styles.container}>
             <Image style={styles.logoImage} source={APP_LOGO} alt="logo" />
-            <Text style={[styles.logoText, globalStyles.textShadow]}>LITE</Text>
+            <Text style={[styles.logoText, globalStyles.textShadow]}>Employee Timekeeping</Text>
         </View>
         {/* <Text style={[styles.logoHeading, globalStyles.textShadow]}>PROJECT MANAGMENT</Text> */}
     </>
@@ -18,16 +18,19 @@ export default function AppHeader() {
 const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
-        alignItems: "flex-end",
+        alignItems: "center",
+        justifyContent: "center",
         marginTop: getStatusBarHeight() - 20
     },
     logoImage: {
-        width: 70,
-        height: 60,
+        width: 80,
+        height: 80,
     },
     logoText: {
-        fontSize: 50,
+        fontSize: 30,
         marginLeft: 10,
+        width: "50%",
+        backgroundColor: "rgba(255, 255, 255, 0.5)",
     },
     logoHeading: {
         fontSize: 30,

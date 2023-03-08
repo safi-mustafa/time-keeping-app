@@ -18,7 +18,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.timekeeping.lite"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,6 +30,11 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": ""
+    "description": "",
+    "extra": {
+      "eas": {
+        "projectId": "978a8e86-82fa-4071-b9a2-94d5d3c05703"
+      }
+    }
   }
 }

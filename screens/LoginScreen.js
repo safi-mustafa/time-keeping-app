@@ -87,7 +87,7 @@ export default function LoginScreen({ navigation }) {
           {loading && <ActivityIndicator size="large" color="#2B3CFF" style={styles.loader2} />}
           <View style={styles.formWrapper}>
             <Text style={[globalStyles.heading]}>Employee Login</Text>
-            <Text style={[globalStyles.textCenter]}>Enter last four digits of SSN</Text>
+            <Text style={[globalStyles.textCenter,{marginTop:15}]}>Enter last four digits of SSN</Text>
             <CodeField
               value={value}
               onChangeText={onValueChange}

@@ -4,7 +4,7 @@ import { globalStyles } from "../utility/globalStyles";
 export default function AppFooter() {
     return <View style={styles.container}>
         <Text style={globalStyles.textCenter}>Copyright &copy; 2019 Elite Managment LLC.</Text>
-        <Text style={globalStyles.textCenter}>Alrights reserved.</Text>
+        <Text style={globalStyles.textCenter}>All rights reserved.</Text>
     </View>
 
 }
