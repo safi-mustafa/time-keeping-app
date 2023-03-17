@@ -7,7 +7,7 @@ import { globalStyles } from "../utility/globalStyles";
 export default function AppHeader() {
     return <>
         <View style={styles.container}>
-            <Image style={styles.logoImage} source={APP_LOGO} alt="logo" />
+            <View style={styles.imageWrapper}><Image style={styles.logoImage} source={APP_LOGO} alt="logo" /></View>
             <Text style={[styles.logoText, globalStyles.textShadow]}>Employee Timekeeping</Text>
         </View>
         {/* <Text style={[styles.logoHeading, globalStyles.textShadow]}>PROJECT MANAGMENT</Text> */}
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        marginTop: getStatusBarHeight() - 20
+        marginTop: getStatusBarHeight()
     },
     logoImage: {
         width: 80,
@@ -29,10 +29,14 @@ const styles = StyleSheet.create({
     logoText: {
         fontSize: 30,
         marginLeft: 10,
-        width: "50%",
+        width: "60%",
         backgroundColor: "rgba(255, 255, 255, 0.5)",
     },
     logoHeading: {
         fontSize: 30,
     },
+    imageWrapper: {
+        width: "40%",
+        alignItems: "flex-end",
+    }
 })

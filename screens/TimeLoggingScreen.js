@@ -116,7 +116,7 @@ export default function TimeLoggingScreen({ navigation, route }) {
   })
 
   return (
-    <AppContainer>
+    <AppContainer hideHeader={true}>
       <ScrollView>
         <View style={styles.formWrapper}>
           <Text style={[textCenter]}>Hours Logged This Period:</Text>

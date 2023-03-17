@@ -61,7 +61,7 @@ export default function ChooseScreen({ navigation }) {
   };
 
   return (
-    <AppContainer>
+    <AppContainer hideHeader={true}>
       <ScrollView>
         <View style={styles.formWrapper}>
           {state?.projects && <>

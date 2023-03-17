@@ -3,12 +3,12 @@ import { StyleSheet, View } from 'react-native';
 import AppFooter from './components/AppFooter';
 import AppHeader from './components/AppHeader';
 
-export default function AppContainer({ children }) {
+export default function AppContainer({ children, hideHeader=false }) {
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <AppHeader />
+      {!hideHeader && <AppHeader />}
       {children}
       <AppFooter />
     </View>
