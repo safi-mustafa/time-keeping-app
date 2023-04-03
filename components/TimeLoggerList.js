@@ -70,7 +70,7 @@ export default function TimeLoggerList({ data, onHourChange }) {
                     </View>
                     <View style={styles.cell}>
                         <TextInput editable={!isApproved} onChangeText={(value) => onChangeText(value, { id, day, ...otherItem })} name={id} keyboardType='numeric' value={totalHours ? totalHours.toString() : ''} style={[styles.cellInput, styles.cellText, (isApproved) && styles.cellDisabled]} />
-                        <Text style={{paddingRight: 5, paddingLeft: 10}}>{isOnSite?'On Site':'Remote'}:</Text>
+                        <Text style={{paddingRight: 5, paddingLeft: 5, fontSize: 12}}>{isOnSite?'On Site':'Remote'}:</Text>
                         <Switch
                             trackColor={{ false: "gray", true: "#007bff" }}
                             thumbColor={true ? "#fff" : "#fff"}
@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
     dateCell: {
         width: '45%',
         fontSize: 13,
+        alignSelf: 'center',
     },
     cell: {
         width: '100%',
@@ -113,13 +114,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     cellText: {
-        fontSize: 16
+        fontSize: 14
     },
     cellInput: {
         borderColor: '#ccc',
         borderWidth: 1,
         padding: 2,
-        minWidth: 85,
+        minWidth: 80,
         marginRight: 5,
         height: 35,
         textAlign: 'center'

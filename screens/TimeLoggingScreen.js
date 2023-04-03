@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableHighlight, View } from "react-native";
+import { Feather } from '@expo/vector-icons';
 
 import AppContainer from "../AppContainer";
 import AppButton from "../components/AppButton";
@@ -17,7 +18,7 @@ export default function TimeLoggingScreen({ navigation, route }) {
   const [loading, setLoading] = useState(false)
 
   const switchTab = (tabIndex) => {
-    tabIndex == TAB.LAST_WEEK ? getTimeSheet(tabIndex, getLastWeekDate()) : getTimeSheet(tabIndex)
+    tabIndex == TAB.LAST_WEEK ? getTimeSheet(tabIndex, getCurrentWeekDate()) : getTimeSheet(tabIndex)
   }
 
   function isActive(value) {
@@ -28,19 +29,35 @@ export default function TimeLoggingScreen({ navigation, route }) {
     getUserData()
   }, [])
 
-  const getLastWeekDate = () => {
+  const getCurrentWeekDate = () => {
     let today = new Date();
     let lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 0);
     return `${lastWeek.getFullYear()}-${lastWeek.getMonth() + 1}-${lastWeek.getDate()}`
   }
 
+  const getWeekDate = (date = '', previousWeek = true) => {
+    let weekOperator = previousWeek ? -7 : 7;
+    let today = new Date(date);
+    let lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + weekOperator);
+    return `${lastWeek.getFullYear()}-${lastWeek.getMonth() + 1}-${lastWeek.getDate()}`
+  }
+
+  const fetchDataByWeek = (previousWeek = true) => {
+    const { sheetResult } = state;
+    const { timesheetBreakdowns } = sheetResult;
+    let weekEnding = previousWeek ? timesheetBreakdowns[0].date : timesheetBreakdowns[timesheetBreakdowns.length - 1].date;
+    const newWeekEnding = getWeekDate(weekEnding, previousWeek);
+    getTimeSheet(state.tabIndex, newWeekEnding)
+  }
+
   const getUserData = async () => {
     const user = await userData();
-    getTimeSheet(TAB.CURRENT_WEEK, getLastWeekDate())
+    getTimeSheet(TAB.CURRENT_WEEK, getCurrentWeekDate())
     setState({ ...state, user })
   }
 
   const getTimeSheet = (tabIndex = TAB.CURRENT_WEEK, WeekEnding = null) => {
+    console.log("🚀 ~ file: TimeLoggingScreen.js:45 ~ getTimeSheet ~ WeekEnding:", WeekEnding)
     const { selectedCraft } = optionState;
     const employeeContractId = selectedCraft?.employeeContract
     setLoading(true);
@@ -77,6 +94,18 @@ export default function TimeLoggingScreen({ navigation, route }) {
     }, 0);
   }
 
+  const disableDate = () => {
+    const { sheetResult } = state;
+    if (sheetResult?.timesheetBreakdowns) {
+      const { timesheetBreakdowns } = sheetResult;
+      const lastDate = timesheetBreakdowns[timesheetBreakdowns.length - 1].date;
+      const currentDate = new Date();
+      const lastDateObj = new Date(lastDate);
+      return currentDate > lastDateObj;
+    }
+    return false;
+  }
+
   const onSubmit = () => {
     setLoading(true);
     console.log("🚀 ~ file: TimeLoggingScreen.js ~ line 104 ~ onSubmit ~ state.sheetResult", state.sheetResult)
@@ -107,11 +136,11 @@ export default function TimeLoggingScreen({ navigation, route }) {
 
   let totalSheetHours = { stHours: 0, otHours: 0, dtHours: 0 }
   Array.isArray(state.sheetResult?.timesheetBreakdowns) && state.sheetResult?.timesheetBreakdowns.forEach(({ dtHours, otHours, stHours }) => {
-    totalSheetHours = { 
-      ...totalSheetHours, 
-      dtHours: totalSheetHours.dtHours + dtHours, 
-      stHours: totalSheetHours.stHours + stHours, 
-      otHours: totalSheetHours.otHours + otHours, 
+    totalSheetHours = {
+      ...totalSheetHours,
+      dtHours: totalSheetHours.dtHours + dtHours,
+      stHours: totalSheetHours.stHours + stHours,
+      otHours: totalSheetHours.otHours + otHours,
     }
   })
 
@@ -119,7 +148,7 @@ export default function TimeLoggingScreen({ navigation, route }) {
     <AppContainer hideHeader={true}>
       <ScrollView>
         <View style={styles.formWrapper}>
-          <Text style={[textCenter]}>Hours Logged This Period:</Text>
+          <Text style={[textCenter, {marginTop: 10}]}>Hours Logged This Period:</Text>
           <Text style={[heading, textCenter]}>{getTotalHours()} Hours</Text>
           <View style={styles.cell}>
             <Text style={styles.cellTime}>ST: <Text style={styles.bold}>{totalSheetHours?.stHours}</Text></Text>
@@ -129,8 +158,23 @@ export default function TimeLoggingScreen({ navigation, route }) {
           {/* <Text style={[heading3, textCenter]}>Total cost: {getTotalCost()}</Text> */}
           <View style={styles.loggerWrapper}>
             <View style={styles.tabsWrapper}>
-              <TouchableHighlight style={[styles.tabItem, isActive(TAB.CURRENT_WEEK) && styles.tabActive]} onPress={() => switchTab(0)}><Text style={[styles.tabText, isActive(TAB.CURRENT_WEEK) && styles.tabActive]}>This Week</Text></TouchableHighlight>
-              {/* <TouchableHighlight style={[styles.tabItem, isActive(TAB.LAST_WEEK) && styles.tabActive]} onPress={() => switchTab(1)}><Text style={[styles.tabText, isActive(TAB.LAST_WEEK) && styles.tabActive]}>Last Week</Text></TouchableHighlight> */}
+              <TouchableHighlight style={{}} onPress={() => fetchDataByWeek()}>
+                <View>
+                  <Feather name="arrow-left" size={24} color="black" />
+                  <Text style={[styles.tabText]}>Prev</Text>
+                </View>
+              </TouchableHighlight>
+              <TouchableHighlight style={[styles.tabItem, isActive(TAB.CURRENT_WEEK) && styles.tabActive]} onPress={() => switchTab(0)}>
+                <Text style={[styles.tabText, isActive(TAB.CURRENT_WEEK) && styles.tabActive]}>This Week</Text>
+              </TouchableHighlight>
+              <View>
+               {disableDate() && <TouchableHighlight style={{}} onPress={() => fetchDataByWeek(false)}>
+                  <View>
+                    <Feather name="arrow-right" size={24} color={'#000'} />
+                    <Text style={[styles.tabText]}>Next</Text>
+                  </View>
+                </TouchableHighlight>}
+              </View>
             </View>
             {state?.sheetResult && <View>
               <TimeLoggerList data={state.sheetResult} onHourChange={onHourChange} />
@@ -160,16 +204,23 @@ const styles = StyleSheet.create({
   },
   tabsWrapper: {
     marginTop: 20,
+    marginBottom: 10,
     flexDirection: 'row',
-    backgroundColor: tabColor
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: '#ddd'
   },
   tabItem: {
     // width: "50%",
-    width: "100%",
+    // width: "100%",
     backgroundColor: '#fff',
     padding: 10,
     borderColor: tabColor,
-    borderWidth: 2
+    borderWidth: 2,
+    alignSelf: 'center',
+    borderRadius: 5,
   },
   tabActive: {
     backgroundColor: tabColor,
