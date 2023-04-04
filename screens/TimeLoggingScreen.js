@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableHighlight, View } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
 import { Feather } from '@expo/vector-icons';
 
 import AppContainer from "../AppContainer";
@@ -29,10 +29,17 @@ export default function TimeLoggingScreen({ navigation, route }) {
     getUserData()
   }, [])
 
+  const getUtcDate = (date = new Date()) => {
+    let newDate = new Date(date);
+    return newDate.toISOString();
+  }
+
+  //get previous or next week date for US time zone
+
+
   const getCurrentWeekDate = () => {
-    let today = new Date();
-    let lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 0);
-    return `${lastWeek.getFullYear()}-${lastWeek.getMonth() + 1}-${lastWeek.getDate()}`
+    let today = new Date(getUtcDate());
+    return `${today.getUTCFullYear()}-${today.getUTCMonth() + 1}-${today.getUTCDate()}`
   }
 
   const getWeekDate = (date = '', previousWeek = true) => {
@@ -148,7 +155,7 @@ export default function TimeLoggingScreen({ navigation, route }) {
     <AppContainer hideHeader={true}>
       <ScrollView>
         <View style={styles.formWrapper}>
-          <Text style={[textCenter, {marginTop: 10}]}>Hours Logged This Period:</Text>
+          <Text style={[textCenter, { marginTop: 10 }]}>Hours Logged This Period:</Text>
           <Text style={[heading, textCenter]}>{getTotalHours()} Hours</Text>
           <View style={styles.cell}>
             <Text style={styles.cellTime}>ST: <Text style={styles.bold}>{totalSheetHours?.stHours}</Text></Text>
@@ -158,22 +165,22 @@ export default function TimeLoggingScreen({ navigation, route }) {
           {/* <Text style={[heading3, textCenter]}>Total cost: {getTotalCost()}</Text> */}
           <View style={styles.loggerWrapper}>
             <View style={styles.tabsWrapper}>
-              <TouchableHighlight style={{}} onPress={() => fetchDataByWeek()}>
+              <TouchableOpacity style={{}} onPress={() => fetchDataByWeek()}>
                 <View>
                   <Feather name="arrow-left" size={24} color="black" />
                   <Text style={[styles.tabText]}>Prev</Text>
                 </View>
-              </TouchableHighlight>
-              <TouchableHighlight style={[styles.tabItem, isActive(TAB.CURRENT_WEEK) && styles.tabActive]} onPress={() => switchTab(0)}>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.tabItem, isActive(TAB.CURRENT_WEEK) && styles.tabActive]} onPress={() => switchTab(0)}>
                 <Text style={[styles.tabText, isActive(TAB.CURRENT_WEEK) && styles.tabActive]}>This Week</Text>
-              </TouchableHighlight>
+              </TouchableOpacity>
               <View>
-               {disableDate() && <TouchableHighlight style={{}} onPress={() => fetchDataByWeek(false)}>
+                {disableDate() && <TouchableOpacity style={{}} onPress={() => fetchDataByWeek(false)}>
                   <View>
                     <Feather name="arrow-right" size={24} color={'#000'} />
                     <Text style={[styles.tabText]}>Next</Text>
                   </View>
-                </TouchableHighlight>}
+                </TouchableOpacity>}
               </View>
             </View>
             {state?.sheetResult && <View>

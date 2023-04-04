@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
         padding: 10
     },
     dateCell: {
-        width: '45%',
+        width: '46%',
         fontSize: 13,
         alignSelf: 'center',
     },
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderWidth: 1,
         padding: 2,
-        minWidth: 80,
+        minWidth: 75,
         marginRight: 5,
         height: 35,
         textAlign: 'center'
