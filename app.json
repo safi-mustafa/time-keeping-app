@@ -2,7 +2,7 @@
   "expo": {
     "name": "Timekeeping",
     "slug": "time-keeping-app",
-    "version": "1.0.5",
+    "version": "1.0.7",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -20,7 +20,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.timekeeping.lite",
-      "buildNumber": "1.0.5"
+      "buildNumber": "1.0.7"
     },
     "android": {
       "adaptiveIcon": {
