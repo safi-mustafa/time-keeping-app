@@ -31,6 +31,7 @@ export default function TimeLoggingScreen({ navigation, route }) {
 
   const getUtcDate = (date = new Date()) => {
     let newDate = new Date(date);
+    // return newDate;
     return newDate.toISOString();
   }
 
@@ -70,7 +71,6 @@ export default function TimeLoggingScreen({ navigation, route }) {
     setLoading(true);
     axios.get(`${API_BASE_URL}/Timesheet/GetTimeSheet?employeeContractId=${employeeContractId}&WeekEnding=${WeekEnding}`).then(({ data }) => {
       setState({ ...state, sheetResult: data.data, tabIndex })
-      console.log("🚀 ~ file: TimeLoggingScreen.js ~ line 49 ~ axios.get ~ data", data)
       setLoading(false);
     }, (errors) => {
       setLoading(false);
@@ -96,9 +96,10 @@ export default function TimeLoggingScreen({ navigation, route }) {
 
   const getTotalHours = () => {
     const data = state?.sheetResult?.timesheetBreakdowns;
-    return data && data.filter(({ totalHours }) => totalHours && totalHours).reduce(function (prev, cur) {
-      return prev + cur.totalHours;
+    const totalHours = data && data.filter(({ totalHours }) => totalHours && totalHours).reduce(function (prev, cur) {
+      return Number(prev) + Number(cur.totalHours);
     }, 0);
+    return Number(totalHours).toFixed(2);
   }
 
   const disableDate = () => {
@@ -155,32 +156,33 @@ export default function TimeLoggingScreen({ navigation, route }) {
     <AppContainer hideHeader={true}>
       <ScrollView>
         <View style={styles.formWrapper}>
-          <Text style={[textCenter, { marginTop: 10 }]}>Hours Logged This Period:</Text>
-          <Text style={[heading, textCenter]}>{getTotalHours()} Hours</Text>
+          <Text style={[textCenter, { marginTop: 10, fontWeight: '600' }]}>Hours Logged This Period:</Text>
+          <Text style={[heading, textCenter, {fontSize: 30, fontWeight: '600'}]}>{getTotalHours()} Hours</Text>
           <View style={styles.cell}>
-            <Text style={styles.cellTime}>ST: <Text style={styles.bold}>{totalSheetHours?.stHours}</Text></Text>
-            <Text style={styles.cellTime}>OT: <Text style={styles.bold}>{totalSheetHours?.otHours}</Text></Text>
-            <Text style={styles.cellTime}>DT: <Text style={styles.bold}>{totalSheetHours?.dtHours}</Text></Text>
+            <View style={styles.cellTimeWrapper}><Text style={styles.cellTime}>ST: <Text style={{fontWeight: 'bold'}}>{totalSheetHours?.stHours}</Text></Text></View>
+            <View style={styles.cellTimeWrapper}><Text style={styles.cellTime}>OT: <Text style={{fontWeight: 'bold'}}>{totalSheetHours?.otHours}</Text></Text></View>
+            <View style={styles.cellTimeWrapper}><Text style={styles.cellTime}>DT: <Text style={{fontWeight: 'bold'}}>{totalSheetHours?.dtHours}</Text></Text></View>
           </View>
           {/* <Text style={[heading3, textCenter]}>Total cost: {getTotalCost()}</Text> */}
           <View style={styles.loggerWrapper}>
             <View style={styles.tabsWrapper}>
-              <TouchableOpacity style={{}} onPress={() => fetchDataByWeek()}>
-                <View>
-                  <Feather name="arrow-left" size={24} color="black" />
-                  <Text style={[styles.tabText]}>Prev</Text>
-                </View>
+              <TouchableOpacity style={[styles.tabItem, styles.tabActive]} onPress={() => fetchDataByWeek()}>
+                {/* <View> */}
+                  {/* <Feather name="arrow-left" size={24} color="black" /> */}
+                  <Text style={[styles.tabText, styles.tabActive]}>Previous</Text>
+                {/* </View> */}
               </TouchableOpacity>
               <TouchableOpacity style={[styles.tabItem, isActive(TAB.CURRENT_WEEK) && styles.tabActive]} onPress={() => switchTab(0)}>
-                <Text style={[styles.tabText, isActive(TAB.CURRENT_WEEK) && styles.tabActive]}>This Week</Text>
+                {/* <Text style={[styles.tabText, isActive(TAB.CURRENT_WEEK) && styles.tabActive]}>This Week</Text> */}
+                <Text style={[styles.tabText, styles.tabActive]}>This Week</Text>
               </TouchableOpacity>
               <View>
-                {disableDate() && <TouchableOpacity style={{}} onPress={() => fetchDataByWeek(false)}>
-                  <View>
-                    <Feather name="arrow-right" size={24} color={'#000'} />
-                    <Text style={[styles.tabText]}>Next</Text>
-                  </View>
-                </TouchableOpacity>}
+                <TouchableOpacity disabled={disableDate()} style={[styles.tabItem, styles.tabActive]} onPress={() => fetchDataByWeek(false)}>
+                  {/* <View> */}
+                    {/* <Feather name="arrow-right" size={24} color={'#000'} /> */}
+                    <Text style={[styles.tabText, styles.tabActive]}>Next</Text>
+                  {/* </View> */}
+                </TouchableOpacity>
               </View>
             </View>
             {state?.sheetResult && <View>
@@ -188,26 +190,27 @@ export default function TimeLoggingScreen({ navigation, route }) {
             </View>}
           </View>
           {loading && <ActivityIndicator size={'large'} color="white" style={globalStyles.loading} />}
-          <AppButton disabled={loading} style={[styles.button, loading && globalStyles.btnDisabled]} onPress={() => onSubmit()} label={'SAVE'} />
+          <AppButton disabled={loading} style={[styles.button,styles.saveBtn, loading && globalStyles.btnDisabled]} onPress={() => onSubmit()} label={'SAVE'} />
         </View>
       </ScrollView>
     </AppContainer>
   );
 }
 
-const tabColor = '#007bff'; //'#dc3545'
+const tabColor = '#ee7d00'//'#007bff'; //'#dc3545'
 const styles = StyleSheet.create({
   formWrapper: {
     display: 'flex',
     // marginVertical: 50,
-    marginBottom: 70
-  },
-  loggerWrapper: {
-    // padding: 20
+    marginBottom: 70,
   },
   button: {
     width: 250,
     alignSelf: 'center',
+  },
+  saveBtn: {
+    borderRadius: 5,
+    backgroundColor: '#4a53d2',
   },
   tabsWrapper: {
     marginTop: 20,
@@ -217,7 +220,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: '#ddd'
+    backgroundColor: '#d4dde7'
   },
   tabItem: {
     // width: "50%",
@@ -244,15 +247,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  cellTimeWrapper: {
+    backgroundColor: '#000',
+    borderRadius: 5,
+    paddingVertical: 7,
+    paddingHorizontal: 10,
+    marginHorizontal: 5,
+  },
   cellTime: {
-    marginHorizontal: 3,
-    color: '#666',
-    marginHorizontal: 10,
-    fontSize: 20
+    color: '#fff',
+    marginHorizontal: 5,
+    fontSize: 18,
   },
   bold: {
     fontweight: 'bold',
-    color: '#000',
-    fontSize: 20
   }
 })

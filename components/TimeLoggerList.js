@@ -24,17 +24,35 @@ export default function TimeLoggerList({ data, onHourChange }) {
         onHourChange(newState);
     }
 
+
+    //convert 1. , .1 to decimal
+    const convertValueWithDotToDecimal = (value) => {
+        console.log("🚀 ~ file: TimeLoggerList.js:30 ~ convertValueWithDotToDecimal ~ value:", value)
+        // console.log("🚀 ~ file: TimeLoggerList.js:30 ~ convertValueWithDotToDecimal ~ value:", value)
+        // if (value.includes('.')) {
+        //     let splitValue = value.split('.');
+        //     if (splitValue[1].length == 1) {
+        //         return `${splitValue[0]}.${splitValue[1]}0`
+        //     }else{
+        //         console.log("🚀 ~ file: TimeLoggerList.js:33 ~ convertValueWithDotToDecimal ~ splitValue:", splitValue)
+        //         return `${splitValue[0]}.${splitValue[1].slice(0, 2)}`
+        //     }
+        // }
+        return value
+    }
+
     const onChangeText = (value, selectedItem) => {
         if (value > 24)
             value = 24
         else if (value < 0)
             value = 1
+
         // let currentDayItem = {};
         const newState = state.map(item => {
-            return item.id == selectedItem?.id ? { ...item, totalHours: value ? parseInt(value) : '' } : item
+            return item.id == selectedItem?.id ? { ...item, totalHours: value ? convertValueWithDotToDecimal(value) : 0 } : item
         })
         onHourChange(newState);
-        getOtherHours(value, selectedItem);
+        // getOtherHours(value, selectedItem);
     }
 
     const setWorkingHours = (id, { totalHours, totalCost, dtHours, otHours, stHours }) => {
@@ -55,24 +73,49 @@ export default function TimeLoggerList({ data, onHourChange }) {
         })
     }
 
+    const addZeroToSingleDigit = (value = 0) => {
+        return value < 10 ? `0${value}` : value
+    }
+
     const formatDate = (date) => {
-        let formattedDate = new Date(date).toISOString().slice(0, 10);
-        formattedDate = formattedDate.split('-');
-        return `${formattedDate[1]}-${formattedDate[2]}-${formattedDate[0]}`
+        // let formattedDate = new Date(date).toISOString().slice(0, 10);
+        // formattedDate = formattedDate.split('-');
+        // return `${formattedDate[1]}-${formattedDate[2]}-${formattedDate[0]}`
+
+        let formattedDate = new Date(date).toLocaleDateString().slice(0, 10);
+        // console.log("🚀 ~ file: TimeLoggerList.js:64 ~ formatDate ~ formattedDate:", formattedDate)
+        formattedDate = formattedDate.split('/');
+        // return `${addZeroToSingleDigit(formattedDate[0])}-${addZeroToSingleDigit(formattedDate[1])}-${formattedDate[2]}`
+        return `${addZeroToSingleDigit(formattedDate[0])}/${addZeroToSingleDigit(formattedDate[1])}`
+    }
+
+    const formatDay = (day) => {
+        return day && day.slice(0, 1)
     }
 
     return <>
         <KeyboardAwareScrollView>
             <View style={styles.container}>
+                <View style={[styles.row, {justifyContent: 'flex-end', width:'100%'}]}>
+                    <Text style={{ fontSize: 16, marginRight: 10}}>On Site:</Text>
+                </View>
                 {state.map(({ id, day, date, isOnSite, totalHours, dtHours, otHours, stHours, ...otherItem }) => <View key={id} style={styles.row}>
                     <View style={styles.dateCell}>
-                        <Text style={styles.cellText}>{day} {formatDate(date)}</Text>
+                        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{formatDay(day)}</Text>
+                        <Text style={{ color: '#0c122491' }}>{formatDate(date)}</Text>
                     </View>
                     <View style={styles.cell}>
-                        <TextInput editable={!isApproved} onChangeText={(value) => onChangeText(value, { id, day, ...otherItem })} name={id} keyboardType='numeric' value={totalHours ? totalHours.toString() : ''} style={[styles.cellInput, styles.cellText, (isApproved) && styles.cellDisabled]} />
-                        <Text style={{paddingRight: 5, paddingLeft: 5, fontSize: 12}}>{isOnSite?'On Site':'Remote'}:</Text>
+                        <TextInput
+                            editable={!isApproved}
+                            onChangeText={(value) => onChangeText(value, { id, day, ...otherItem })}
+                            name={id}
+                            keyboardType='numeric'
+                            value={totalHours ? totalHours.toString() : ''}
+                            style={[styles.cellInput, styles.cellText, (isApproved) && styles.cellDisabled]}
+                        />
+                        {/* <Text style={{ paddingRight: 5, paddingLeft: 5, fontSize: 12 }}>{isOnSite ? 'On Site' : 'Remote'}:</Text> */}
                         <Switch
-                            trackColor={{ false: "gray", true: "#007bff" }}
+                            trackColor={{ false: "#d2d2d2", true: "#EE7D00" }}
                             thumbColor={true ? "#fff" : "#fff"}
                             ios_backgroundColor="#eeeeee"
                             onValueChange={(value) => onSiteChange(value, { id, day, ...otherItem })}
@@ -101,7 +144,7 @@ const styles = StyleSheet.create({
         padding: 10
     },
     dateCell: {
-        width: '46%',
+        width: '48%',
         fontSize: 13,
         alignSelf: 'center',
     },
@@ -119,10 +162,11 @@ const styles = StyleSheet.create({
     cellInput: {
         borderColor: '#ccc',
         borderWidth: 1,
+        borderRadius: 5,
         padding: 2,
-        minWidth: 75,
-        marginRight: 5,
-        height: 35,
+        minWidth: 95,
+        marginRight: 15,
+        height: 40,
         textAlign: 'center'
     },
     cellDisabled: {
@@ -136,7 +180,6 @@ const styles = StyleSheet.create({
         width: 45
     },
     bold: {
-        fontweight: 'bold',
-        color: '#000'
+        fontWeight: 'bold',
     }
 })

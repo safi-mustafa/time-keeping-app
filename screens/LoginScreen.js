@@ -86,7 +86,7 @@ export default function LoginScreen({ navigation }) {
         <KeyboardAwareScrollView enableAutomaticScroll={true}>
           {loading && <ActivityIndicator size="large" color="#2B3CFF" style={styles.loader2} />}
           <View style={styles.formWrapper}>
-            <Text style={[globalStyles.heading]}>Employee Login</Text>
+            <Text style={[globalStyles.heading, {fontWeight: '400'}]}>EMPLOYEE LOGIN</Text>
             <Text style={[globalStyles.textCenter,{marginTop:15}]}>Enter last four digits of SSN</Text>
             <CodeField
               value={value}
@@ -106,7 +106,7 @@ export default function LoginScreen({ navigation }) {
             />
             <TouchableOpacity disabled={loading} onPress={() => onSubmit()} style={globalStyles.btnPrimary}>
               {loading && <ActivityIndicator color={'#ffffff'} style={styles.loader} />}
-              <Text style={globalStyles.btnText}>Login</Text>
+              <Text style={globalStyles.btnText}>LOGIN</Text>
             </TouchableOpacity>
           </View>
         </KeyboardAwareScrollView>
@@ -123,19 +123,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   codeFieldRoot: {
-    marginVertical: 10
+    marginVertical: 25,
   },
   cell: {
-    width: 55,
+    width: 60,
     height: 70,
     lineHeight: 60,
     fontSize: 30,
-    borderWidth: 2,
-    borderColor: '#00000030',
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: '#c6d9eb',
     textAlign: 'center',
   },
   focusCell: {
-    borderColor: '#000',
+    borderColor: '#93adc6',
   },
   loader: {
     position: 'absolute',

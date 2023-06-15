@@ -15,8 +15,8 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Login">
           <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="Choose" component={ChooseScreen} options={{ title: 'Choose Option' }} />
-          <Stack.Screen name="TimeLogging" component={TimeLoggingScreen} options={{ title: 'Time Logging' }} />
+          <Stack.Screen name="Choose" component={ChooseScreen} options={{ title: 'CHOOSE OPTION' }} />
+          <Stack.Screen name="TimeLogging" component={TimeLoggingScreen} options={{ title: 'TIMESHEET' }} />
         </Stack.Navigator>
       </NavigationContainer>
     </RootSiblingParent>

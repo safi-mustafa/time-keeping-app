@@ -38,8 +38,16 @@ export default function ChooseScreen({ navigation }) {
     return formateRadioOptions(projects.map(({ project }) => ({ ...project })))
   }
 
+  const formateName = (name) => {
+    let nameArray = name.split('-');
+    if (nameArray.length > 1) {
+      return <View><Text style={{ fontWeight: 'bold' }}>{nameArray[0]}</Text><Text>- {nameArray[1]}</Text></View>
+    }
+    return name;
+  }
+
   const formateRadioOptions = (values) => {
-    return values.map(({ name, id, employeeContract = null }) => ({ label: name, value: id, employeeContract }))
+    return values.map(({ name, id, employeeContract = null }) => ({ label: formateName(name), value: id, employeeContract }))
   }
 
   const onProjectSelection = (value) => {
@@ -65,8 +73,10 @@ export default function ChooseScreen({ navigation }) {
       <ScrollView>
         <View style={styles.formWrapper}>
           {state?.projects && <>
-            <Text style={[globalStyles.heading]}>Choose Project</Text>
+            <Text style={[globalStyles.heading, { fontWeight: '400' }]}>CHOOSE PROJECT</Text>
             <RadioButtonRN
+              boxActiveBgColor={'#f7dabb'}
+              activeColor={'#ee7d00'}
               data={formateProjectOptions(state?.projects)}
               selectedBtn={({ label, value }) => onProjectSelection(value)}
             />
@@ -74,6 +84,8 @@ export default function ChooseScreen({ navigation }) {
           {state?.selectedProject && <>
             <Text style={[globalStyles.heading, globalStyles.mt3]}>Choose Craft</Text>
             <RadioButtonRN
+              boxActiveBgColor={'#f7dabb'}
+              activeColor={'#ee7d00'}
               initial={resetCraft && -1}
               data={formateRadioOptions(state?.selectedProject?.craft)}
               selectedBtn={(option) => onCraftSelection(option)}

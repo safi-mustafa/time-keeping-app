@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-const primaryColor = '#2B3CFF';
+const primaryColor = '#4a53d2';
 const lightColor = '#FFFFFF';
 const darkColor = '#999999';
 export const globalStyles = StyleSheet.create({
@@ -14,6 +14,7 @@ export const globalStyles = StyleSheet.create({
         padding: 15,
         textAlign: "center",
         color: '#fff',
+        borderRadius: 5,
     },
     btnText: {
         fontSize: 20,
@@ -21,8 +22,9 @@ export const globalStyles = StyleSheet.create({
         textAlign: "center",
     },
     heading: {
-        fontSize: 40,
+        fontSize: 36,
         marginTop: 10,
+        marginBottom: 10,
         fontWeight: "300"
     },
     heading2: {

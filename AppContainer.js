@@ -18,8 +18,9 @@ export default function AppContainer({ children, hideHeader=false }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
+    // backgroundColor: '#fff',
+    backgroundColor: '#f2f8ff75',
     // justifyContent: 'center',
     // justifyContent: 'space-around',
   },
