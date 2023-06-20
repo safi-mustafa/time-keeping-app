@@ -63,6 +63,7 @@ export default function LoginScreen({ navigation }) {
         let resMessage = error?.response?.data?.errors?.message;
         console.log("🚀 ~ file: LoginScreen.js ~ line 48 ~ .then ~ error", resMessage)
         let message = Array.isArray(resMessage) ? resMessage.join('.') : 'Something went wrong, Please try again.'
+        message = `${message} - ${API_BASE_URL}`;
         Toast.show(message, {
           duration: Toast.durations.LONG,
           position: Toast.positions.TOP,
