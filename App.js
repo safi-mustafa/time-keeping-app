@@ -6,12 +6,14 @@ import { RootSiblingParent } from 'react-native-root-siblings';
 import LoginScreen from './screens/LoginScreen';
 import ChooseScreen from './screens/ChooseScreen';
 import TimeLoggingScreen from './screens/TimeLoggingScreen';
+import UpdateNeeded from './components/UpdateNeeded';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
 
   return (
     <RootSiblingParent>
+      <UpdateNeeded />
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Login">
           <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
