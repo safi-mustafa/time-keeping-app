@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.timekeeping.lite",
@@ -32,19 +34,21 @@
       [
         "expo-updates",
         {
-          "username": "irfan-centangle"
+          "username": "saqibdev"
         }
       ]
     ],
     "extra": {
-      "eas": {}
+      "eas": {
+        "projectId": "4ce9dd49-60be-4246-be20-dc26e9140be1"
+      }
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
     },
     "updates": {
       "fallbackToCacheTimeout": 0,
-      "url": "https://u.expo.dev/"
+      "url": "https://u.expo.dev/4ce9dd49-60be-4246-be20-dc26e9140be1"
     }
   }
 }
