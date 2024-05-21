@@ -67,9 +67,9 @@ export default function TimeLoggingScreen({ navigation, route }) {
   const getTimeSheet = (tabIndex = TAB.CURRENT_WEEK, WeekEnding = null) => {
     console.log("🚀 ~ file: TimeLoggingScreen.js:45 ~ getTimeSheet ~ WeekEnding:", WeekEnding)
     const { selectedCraft } = optionState;
-    const employeeContractId = selectedCraft?.employeeContract
+    const workOrderTechnicianId = selectedCraft?.workOrderTechnician
     setLoading(true);
-    axios.get(`${API_BASE_URL}/Timesheet/GetTimeSheet?employeeContractId=${employeeContractId}&WeekEnding=${WeekEnding}`).then(({ data }) => {
+    axios.get(`${API_BASE_URL}/Timesheet/GetTimeSheet?WorkOrderTechnicianId=${workOrderTechnicianId}&WeekEnding=${WeekEnding}`).then(({ data }) => {
       setState({ ...state, sheetResult: data.data, tabIndex })
       setLoading(false);
     }, (errors) => {

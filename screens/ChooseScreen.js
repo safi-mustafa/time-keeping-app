@@ -21,8 +21,8 @@ export default function ChooseScreen({ navigation }) {
   }
 
   const getProjects = () => {
-    axios.get(`${API_BASE_URL}/Timesheet/GetProjects`).then(({ data }) => {
-      setState({ ...state, projects: data.data?.employeeProjects })
+    axios.get(`${API_BASE_URL}/Timesheet/GetWorkOrders`).then(({ data }) => {
+      setState({ ...state, projects: data.data?.techniciansWorkOrders })
     }, (errors) => {
       console.log("🚀 ~ file: ChooseScreen.js ~ line 30 ~ axios.get ~ errors", errors)
       Toast.show('Something went wrong, please try again later', {
@@ -35,23 +35,23 @@ export default function ChooseScreen({ navigation }) {
   }
 
   const formateProjectOptions = (projects) => {
-    return formateRadioOptions(projects.map(({ project }) => ({ ...project })))
+    return formateRadioOptions(projects.map(({ workOrder }) => ({ ...workOrder })))
   }
 
   const formateName = (name) => {
-    let nameArray = name.split('-');
-    if (nameArray.length > 1) {
+    let nameArray = name?.split('-');
+    if (nameArray?.length > 1) {
       return <View><Text style={{ fontWeight: 'bold' }}>{nameArray[0]}</Text><Text>- {nameArray[1]}</Text></View>
     }
     return name;
   }
 
   const formateRadioOptions = (values) => {
-    return values.map(({ name, id, employeeContract = null }) => ({ label: formateName(name), value: id, employeeContract }))
+    return values.map(({ name, id, workOrderTechnician = null }) => ({ label: formateName(name), value: id, workOrderTechnician }))
   }
 
   const onProjectSelection = (value) => {
-    const selectedProject = state?.projects.find(({ project }) => project.id === value);
+    const selectedProject = state?.projects.find(({ workOrder }) => workOrder.id === value);
     setState({ ...state, selectedProject, selectedCraft: null })
     setResetCraft(true)
     setTimeout(() => {
