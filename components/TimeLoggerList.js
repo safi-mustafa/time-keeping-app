@@ -93,12 +93,14 @@ export default function TimeLoggerList({ data, onHourChange }) {
         return day && day.slice(0, 1)
     }
 
+    const showOnSiteToggle = false;
+
     return <>
         <KeyboardAwareScrollView>
             <View style={styles.container}>
-                <View style={[styles.row, {justifyContent: 'flex-end', width:'100%'}]}>
+                {/* <View style={[styles.row, {justifyContent: 'flex-end', width:'100%'}]}>
                     <Text style={{ fontSize: 16, marginRight: 10}}>On Site:</Text>
-                </View>
+                </View> */}
                 {state.map(({ id, day, date, isOnSite, totalHours, dtHours, otHours, stHours, ...otherItem }) => <View key={id} style={styles.row}>
                     <View style={styles.dateCell}>
                         <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{formatDay(day)}</Text>
@@ -114,13 +116,15 @@ export default function TimeLoggerList({ data, onHourChange }) {
                             style={[styles.cellInput, styles.cellText, (isApproved) && styles.cellDisabled]}
                         />
                         {/* <Text style={{ paddingRight: 5, paddingLeft: 5, fontSize: 12 }}>{isOnSite ? 'On Site' : 'Remote'}:</Text> */}
-                        <Switch
+                        
+                        {showOnSiteToggle && <Switch
                             trackColor={{ false: "#d2d2d2", true: "#EE7D00" }}
                             thumbColor={true ? "#fff" : "#fff"}
                             ios_backgroundColor="#eeeeee"
                             onValueChange={(value) => onSiteChange(value, { id, day, ...otherItem })}
                             value={isOnSite}
-                        />
+                        />}
+
                         {/* <Text style={styles.cellTime}>ST: <Text style={styles.bold}>{stHours}</Text></Text>
                         <Text style={styles.cellTime}>OT: <Text style={styles.bold}>{otHours}</Text></Text>
                         <Text style={styles.cellTime}>DT: <Text style={styles.bold}>{dtHours}</Text></Text> */}
@@ -144,7 +148,7 @@ const styles = StyleSheet.create({
         padding: 10
     },
     dateCell: {
-        width: '48%',
+        width: '65%',
         fontSize: 13,
         alignSelf: 'center',
     },

@@ -17,7 +17,7 @@ export default function ChooseScreen({ navigation }) {
 
   const getUserData = async () => {
     getProjects()
-    setState({ ...state, user })
+    setState({ ...state })
   }
 
   const getProjects = () => {
@@ -73,7 +73,7 @@ export default function ChooseScreen({ navigation }) {
       <ScrollView>
         <View style={styles.formWrapper}>
           {state?.projects && <>
-            <Text style={[globalStyles.heading, { fontWeight: '400' }]}>CHOOSE PROJECT</Text>
+            <Text style={[globalStyles.heading, { fontWeight: '400' }]}>Choose Work Order</Text>
             <RadioButtonRN
               boxActiveBgColor={'#f7dabb'}
               activeColor={'#ee7d00'}

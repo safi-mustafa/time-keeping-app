@@ -3,7 +3,7 @@ import { globalStyles } from "../utility/globalStyles";
 
 export default function AppFooter() {
     return <View style={styles.container}>
-        <Text style={[globalStyles.textCenter, {marginBottom: 10, color: '#253053'}]}>Copyright &copy; 2023 Precision Material Management.</Text>
+        <Text style={[globalStyles.textCenter, {marginBottom: 10, color: '#253053'}]}>Copyright &copy; 2024 Precision Material Management.</Text>
         {/* <Text style={globalStyles.textCenter}>All rights reserved.</Text> */}
     </View>
 

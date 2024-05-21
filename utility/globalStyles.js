@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-const primaryColor = '#4a53d2';
+const primaryColor = '#1d7d95';
 const lightColor = '#FFFFFF';
 const darkColor = '#999999';
 export const globalStyles = StyleSheet.create({

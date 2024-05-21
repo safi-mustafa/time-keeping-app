@@ -197,7 +197,7 @@ export default function TimeLoggingScreen({ navigation, route }) {
   );
 }
 
-const tabColor = '#ee7d00'//'#007bff'; //'#dc3545'
+const tabColor = '#842c20'//'#007bff'; //'#dc3545'
 const styles = StyleSheet.create({
   formWrapper: {
     display: 'flex',
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   },
   saveBtn: {
     borderRadius: 5,
-    backgroundColor: '#4a53d2',
+    backgroundColor: globalStyles.btnPrimary.backgroundColor,
   },
   tabsWrapper: {
     marginTop: 20,
