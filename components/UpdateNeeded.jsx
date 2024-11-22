@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Alert, AppState } from "react-native";
+import { Alert, AppState, Platform } from "react-native";
 import Constants from "expo-constants";
 import * as Linking from "expo-linking";
 
