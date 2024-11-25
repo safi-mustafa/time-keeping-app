@@ -22,6 +22,7 @@ export default function ChooseScreen({ navigation }) {
 
   const getProjects = () => {
     axios.get(`${API_BASE_URL}/Timesheet/GetProjects`).then(({ data }) => {
+      console.log("🚀 ~ file: ChooseScreen.js:26 ~ axios.get ~ data:", data);
       setState({ ...state, projects: data.data?.employeeProjects })
     }, (errors) => {
       console.log("🚀 ~ file: ChooseScreen.js ~ line 30 ~ axios.get ~ errors", errors)
